@@ -1,37 +1,11 @@
 // rzeznia3server.cpp : Defines the entry point for the console application.
 //
-#include <windows.h>
 
-#include <stdio.h>
-#include <cstdio>
-#include <io.h>
-#include <fcntl.h>
+#include "stdafx.h"
+
 #include <iostream>
-#include <vector>
 
 #include "SDL_net.h"
-
-void cycle()
-{
-
-}
-
-bool init()
-{
-   printf("Initialize SDLNet...");
-   if (SDLNet_Init() == -1)
-   {
-      std::cout << "failed" << SDLNet_GetError() << std::endl;
-      return false;
-   }
-   else
-      printf("success");
-
-
-
-
-   return true;
-}
 
 using namespace std;
 
@@ -275,28 +249,8 @@ int test()
 
 #undef main
 
-void main()
+int main()
 {
-   // use the console just like a normal one - printf(), getchar(), .
-   printf("#######################################################################\n");
-   printf("##########             RZEZNIA 3 SERVER                      ##########\n");
-   printf("#######################################################################\n");
-
-   test();
-   return;
-
-   if (!init())
-      return;
-
-   cycle();
-
-   int x;
-
-   std::cin >> x;
-
-   std::vector<int> f;
-
-    return;
+    return 0;
 }
-
 
