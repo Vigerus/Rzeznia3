@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <SDLNetDir>d:\progs\SDL2_net-2.0.1</SDLNetDir>
+    <SDLNetInc>$(SDLNetDir)\include</SDLNetInc>
+    <SDLNetLib>$(SDLNetDir)\lib\x64</SDLNetLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>SDL-net paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SDLNetInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SDLNetLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="SDLNetDir">
+      <Value>$(SDLNetDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLNetInc">
+      <Value>$(SDLNetInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLNetLib">
+      <Value>$(SDLNetLib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

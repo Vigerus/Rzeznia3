@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <SDLDir>d:\progs\SDL2-2.0.3</SDLDir>
+    <SDLInc>$(SDLDir)\include</SDLInc>
+    <SDLLib>$(SDLDir)\lib\x64</SDLLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>SDL paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SDLInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SDLLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="SDLDir">
+      <Value>$(SDLDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLInc">
+      <Value>$(SDLInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLLib">
+      <Value>$(SDLLib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
