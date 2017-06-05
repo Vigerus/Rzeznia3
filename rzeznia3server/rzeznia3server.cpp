@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 
+//#define _WINSOCK_DEPRECATED_NO_WARNINGS
+
 #include <iostream>
 #include <memory>
 #include <winsock2.h>
@@ -119,7 +121,9 @@ public:
          csock = new SOCKET;
          if ((*csock = accept(hsock, (sockaddr*)&sadr, &addr_size)) != -1)
          {
-            //printf("---------------------\nReceived connection from %s\n", inet_ntoa(sadr.sin_addr));
+            char str[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &(sadr.sin_addr), str, INET_ADDRSTRLEN);
+            printf("---------------------\nReceived connection from %s\n", str);
             //pthread_create(&thread_id, 0, &SocketHandler, (void*)csock);
             //pthread_detach(thread_id);
             new std::thread(socketHandler, csock);

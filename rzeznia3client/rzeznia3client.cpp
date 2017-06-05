@@ -3,8 +3,6 @@
 
 #include "stdafx.h"
 
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
-
 #include <iostream>
 #include <memory>
 #include <winsock2.h>
@@ -61,7 +59,7 @@ public:
       my_addr.sin_port = htons(host_port);
 
       memset(&(my_addr.sin_zero), 0, 8);
-      my_addr.sin_addr.s_addr = inet_addr(host_name);
+      inet_pton(AF_INET, host_name, &my_addr.sin_addr);
       if (connect(hsock, (struct sockaddr*)&my_addr, sizeof(my_addr)) == -1) 
       {
          if ((err = errno) != EINPROGRESS) 
@@ -76,7 +74,7 @@ public:
 
       int pkt = 1;
 
-      bytecount = send(hsock, (const char *)&pkt, 4, 0);
+      //bytecount = send(hsock, (const char *)&pkt, 4, 0);
 
 //       for (int i = 0; i < 10000; i++) 
 //       {
@@ -100,6 +98,10 @@ public:
    void run()
    {
 
+      while (true)
+      {
+         Sleep(1000);
+      }
    }
 };
 
