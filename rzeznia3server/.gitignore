@@ -1,0 +1,27 @@
+# global
+# 
+#
+# Whitelist all source folders 
+#
+/*
+!.gitignore
+
+# Ignore some generally uninteresting files
+# 
+**/.metadata
+**/*.bak
+**/*.pb.cc
+**/*.pb.h
+**/*.suo
+**/*.sdf
+**/*.opensdf
+**/*.class
+**/*.orig
+**/*.VC.db
+**/*.project
+**/*.VC.opendb
+**/*.VC.db
+**/*.settings
+**/*.VC.opendb
+**/*.classpath
+**/target/**
