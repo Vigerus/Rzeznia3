@@ -136,8 +136,10 @@ public:
    }
 };
 
-int main()
+int _tmain(int argc, _TCHAR* argv[])
 {
+   ::CoInitialize(0);
+
    if (!winsock_init())
       return(-1);
 
