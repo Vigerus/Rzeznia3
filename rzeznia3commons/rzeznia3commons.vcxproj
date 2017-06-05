@@ -99,7 +99,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions);RZEZNIA3COMMONS_EXPORT;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
@@ -135,8 +135,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="rzeznia3commons.h" />
     <ClInclude Include="Stdafx.h" />
+    <ClInclude Include="winsockHelper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Dependencies.cpp" />
     <ClCompile Include="rzeznia3commons.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -144,6 +146,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="winsockHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
