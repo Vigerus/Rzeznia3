@@ -1,16 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ImportGroup Label="PropertySheets">
-    <Import Project="platform.props" Condition=" '$(PlatformImported)' == '' " />
-    <Import Project="cab_paths.props" Condition=" '$(CabPathsImported)' == '' " />
-  </ImportGroup>
   <PropertyGroup>
     <ProtobufPathsImported>true</ProtobufPathsImported>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros">
-    <ProtobufInc>$(CabInc)</ProtobufInc>
-    <ProtobufLib>$(CabLib)</ProtobufLib>
-    <ProtobufBin>$(CabDir)\bin\$(PlatformPrefix)\Release</ProtobufBin>
+    <ProtobufDir>D:\progs\protoc-3.3.0</ProtobufDir>
+    <ProtobufInc>$(ProtobufDir)\include</ProtobufInc>
+    <ProtobufLib>$(ProtobufDir)\bin</ProtobufLib>
+    <ProtobufBin>$(ProtobufDir)\bin</ProtobufBin>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>

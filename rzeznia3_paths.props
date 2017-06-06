@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
+    <Import Project="vsprops\protobuf_paths.props" />
     <Import Project="vsprops\sdl_paths.props" />
     <Import Project="vsprops\sdlnet_paths.props" />
   </ImportGroup>
