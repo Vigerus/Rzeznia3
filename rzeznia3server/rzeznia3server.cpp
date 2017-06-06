@@ -9,18 +9,21 @@
 #include <memory>
 #include <winsock2.h>
 #include <Ws2tcpip.h>
-#include <thread> 
+#include <thread>
+#include <vector>
+#include <sstream>
 
 #include "../rzeznia3commons/winsockHelper.h"
+#include "../rzeznia3commons/rzeznia3commons.h"
 
 //move it to configuration later
 #define SERVER_PORT 1101
 
 
 
-void socketHandler(SOCKET *socket)
+void socketHandler(std::shared_ptr<SOCKET> socket, std::shared_ptr<rzeznia3commons::Player> gracz)
 {
-   SOCKET *csock = socket;
+   std::shared_ptr<SOCKET> csock = socket;
 
    char buffer[4];
    int bytecount = 0;
@@ -28,6 +31,8 @@ void socketHandler(SOCKET *socket)
    //log_packet logp;
 
    memset(buffer, '\0', 4);
+
+   send(*csock, "dupa", 4, 0);
 
    while (1) 
    {
@@ -37,6 +42,7 @@ void socketHandler(SOCKET *socket)
          4, MSG_PEEK)) == -1) 
       {
          fprintf(stderr, "Error receiving data %d\n", WSAGetLastError());
+         printf("Disconnecting %s...", gracz->name.c_str());
          return;
       }
       else if (bytecount == 0)
@@ -51,13 +57,22 @@ void socketHandler(SOCKET *socket)
 class RzezniaServer
 {
 public:
-   RzezniaServer() {};
+   RzezniaServer()
+   {
+      newplayercount = 0;
+   };
+
    virtual ~RzezniaServer() {};
 
+   unsigned int newplayercount;
+
    SOCKET hsock;
-   SOCKET *csock;
+   std::shared_ptr<SOCKET> csock;
    socklen_t addr_size = 0;
    sockaddr_in sadr;
+
+   std::vector<std::shared_ptr<rzeznia3commons::Player>> m_players;
+   std::vector<std::shared_ptr<rzeznia3commons::Ludzik>> m_ludziki;
 
    bool init()
    {
@@ -118,15 +133,23 @@ public:
    {
       while (true) {
          printf("waiting for a connection\n");
-         csock = new SOCKET;
+         csock = std::shared_ptr<SOCKET>(new SOCKET);
          if ((*csock = accept(hsock, (sockaddr*)&sadr, &addr_size)) != -1)
          {
             char str[INET_ADDRSTRLEN];
             inet_ntop(AF_INET, &(sadr.sin_addr), str, INET_ADDRSTRLEN);
             printf("---------------------\nReceived connection from %s\n", str);
+
+            std::shared_ptr<rzeznia3commons::Player> nowygracz = std::make_shared<rzeznia3commons::Player>();
+            HRESULT hCreateGuid = CoCreateGuid(&nowygracz->guid);
+            std::ostringstream ss;
+            ss << "Player" << std::dec << ++newplayercount;
+            nowygracz->name = ss.str();
+            
+            
             //pthread_create(&thread_id, 0, &SocketHandler, (void*)csock);
             //pthread_detach(thread_id);
-            new std::thread(socketHandler, csock);
+            new std::thread(socketHandler, csock, nowygracz);
          }
          else
          {

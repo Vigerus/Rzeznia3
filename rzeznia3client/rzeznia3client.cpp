@@ -8,11 +8,34 @@
 #include <winsock2.h>
 #include <Ws2tcpip.h>
 #include <thread> 
+#include <string>
 
 #include "../rzeznia3commons/winsockHelper.h"
 
 //move it to configuration later
 #define SERVER_PORT 1101
+
+void socketListener(std::shared_ptr<SOCKET> socket)
+{
+   char buffer[4];
+   int bytecount = 0;
+
+   while (true)
+   {
+      if ((bytecount = recv(*socket, buffer, 4, MSG_PEEK)) == -1)
+      {
+         fprintf(stderr, "Error receiving data %d\n", WSAGetLastError());
+         return;
+      }
+      else if (bytecount == 0)
+         break;
+
+      printf("got a message!\n");
+      char buf[5] = { 0 };
+      recv(*socket, buf, 4, MSG_WAITALL);
+      printf("Received: %s", buf);
+   }
+}
 
 class RzezniaClient
 {
@@ -20,7 +43,7 @@ public:
    RzezniaClient() {};
    virtual ~RzezniaClient() {};
 
-   SOCKET hsock;
+   std::shared_ptr<SOCKET> hsock;
 
    bool init()
    {
@@ -36,8 +59,8 @@ public:
       int * p_int;
       int err;
 
-      hsock = socket(AF_INET, SOCK_STREAM, 0);
-      if (hsock == -1) 
+      hsock = std::make_shared<SOCKET>(socket(AF_INET, SOCK_STREAM, 0));
+      if (*hsock == -1) 
       {
          printf("Error initializing socket %d\n", errno);
          return 0;
@@ -46,8 +69,8 @@ public:
       p_int = (int*)malloc(sizeof(int));
       *p_int = 1;
 
-      if ((setsockopt(hsock, SOL_SOCKET, SO_REUSEADDR, (char*)p_int, sizeof(int)) == -1) ||
-         (setsockopt(hsock, SOL_SOCKET, SO_KEEPALIVE, (char*)p_int, sizeof(int)) == -1)) 
+      if ((setsockopt(*hsock, SOL_SOCKET, SO_REUSEADDR, (char*)p_int, sizeof(int)) == -1) ||
+         (setsockopt(*hsock, SOL_SOCKET, SO_KEEPALIVE, (char*)p_int, sizeof(int)) == -1)) 
       {
          printf("Error setting options %d\n", errno);
          free(p_int);
@@ -60,7 +83,7 @@ public:
 
       memset(&(my_addr.sin_zero), 0, 8);
       inet_pton(AF_INET, host_name, &my_addr.sin_addr);
-      if (connect(hsock, (struct sockaddr*)&my_addr, sizeof(my_addr)) == -1) 
+      if (connect(*hsock, (struct sockaddr*)&my_addr, sizeof(my_addr)) == -1) 
       {
          if ((err = errno) != EINPROGRESS) 
          {
@@ -71,8 +94,9 @@ public:
 
       printf("connected.\n");
 
+      new std::thread(socketListener, hsock);
 
-      int pkt = 1;
+      //int pkt = 1;
 
       //bytecount = send(hsock, (const char *)&pkt, 4, 0);
 
@@ -97,10 +121,11 @@ public:
 
    void run()
    {
-
       while (true)
       {
-         Sleep(1000);
+         std::string tekst;
+
+         std::cin >> tekst;
       }
    }
 };
