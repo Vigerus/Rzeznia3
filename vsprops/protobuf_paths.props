@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="platform.props" Condition=" '$(PlatformImported)' == '' " />
+    <Import Project="cab_paths.props" Condition=" '$(CabPathsImported)' == '' " />
+  </ImportGroup>
+  <PropertyGroup>
+    <ProtobufPathsImported>true</ProtobufPathsImported>
+  </PropertyGroup>
+  <PropertyGroup Label="UserMacros">
+    <ProtobufInc>$(CabInc)</ProtobufInc>
+    <ProtobufLib>$(CabLib)</ProtobufLib>
+    <ProtobufBin>$(CabDir)\bin\$(PlatformPrefix)\Release</ProtobufBin>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>
+    <_PropertySheetDisplayName>Protobuf paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="ProtobufDir">
+      <Value>$(ProtobufDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ProtobufInc">
+      <Value>$(ProtobufInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ProtobufLib">
+      <Value>$(ProtobufLib)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ProtobufBin">
+      <Value>$(ProtobufBin)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

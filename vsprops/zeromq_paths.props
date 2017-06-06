@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+     <Import Project="platform.props" Condition=" '$(PlatformImported)' == '' " />
+     <Import Project="cab_paths.props" Condition=" '$(CabPathsImported)' == '' " />
+  </ImportGroup>
+  <PropertyGroup>
+    <ZeroMQPathsImported>true</ZeroMQPathsImported>
+  </PropertyGroup>  
+  <PropertyGroup Label="UserMacros">
+    <ZeroMQInc>$(CabInc)\ZeroMQ</ZeroMQInc>
+    <ZeroMQLib>$(CabLib)</ZeroMQLib>
+    <ZeroMQBin>$(CabBin)</ZeroMQBin>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>
+    <_PropertySheetDisplayName>ZeroMQ paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ZeroMQInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ZeroMQLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="ZeroMQDir">
+      <Value>$(ZeroMQDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ZeroMQInc">
+      <Value>$(ZeroMQInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ZeroMQLib">
+      <Value>$(ZeroMQLib)</Value>
+    </BuildMacro>
+    <BuildMacro Include="ZeroMQBin">
+      <Value>$(ZeroMQBin)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

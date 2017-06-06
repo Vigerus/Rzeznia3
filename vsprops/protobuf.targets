@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="Google_Protocol_Buffers">
+      <Targets>_Google_Protocol_Buffers</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="Google_Protocol_Buffers"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_Google_Protocol_Buffers"
+    BeforeTargets="CLCompile"
+	Inputs="%(Google_Protocol_Buffers.Identity)"
+	Outputs="$([System.String]::Copy(&quot;%(Google_Protocol_Buffers.Identity)&quot;).Replace(&quot;.proto&quot;,&quot;.pb.cc&quot;));$([System.String]::Copy(&quot;%(Google_Protocol_Buffers.Identity)&quot;).Replace(&quot;.proto&quot;,&quot;.pb.h&quot;))"
+	>
+      <Message
+      Importance="High"
+      Text="Generating Protocol Buffer CPP files for %(Google_Protocol_Buffers.Identity)" />
+	<Exec command="
+    setlocal enableextensions enabledelayedexpansion
+   
+    set SolutionDir=$(SolutionDir)
+    set InputPath=%3
+    set LibDri=$(CabInc)
+    set ProjDir=$(ProjectDir)
+    
+    for %%F in (&quot;%SolutionDir:~0,-1%&quot;) do set SrcDir=%%~dpF
+    
+    call :uppercase %SrcDir% SrcDir
+    call :uppercase %LibDri% LibDri
+    call :uppercase %ProjDir% ProjDir
+        
+    $(ProtobufBin)\protoc --error_format=msvs --cpp_out=%SrcDir% --proto_path=%SrcDir% --proto_path=%LibDri% %ProjDir%%(Google_Protocol_Buffers.Identity)
+    endlocal
+    goto :eof
+    
+    :uppercase
+      set var_=%~1
+      set letter=!var_:~0,1!
+      for %%A in (A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) do (
+      set letter=!letter:%%A=%%A!
+      )
+      set %2=!letter!!var_:~1!
+      goto :eof
+    
+	">
+	</Exec>
+  </Target>
+  <Target
+    Name="_Google_Protocol_Buffers_Clean"
+    BeforeTargets="Clean"
+	>
+      <Message
+      Importance="High"
+      Text="Clear Protocol Buffer CPP files for %(Google_Protocol_Buffers.Identity)" />
+	<Exec command="
+	setlocal enableextensions enabledelayedexpansion
+	set proto_file_path=%(Google_Protocol_Buffers.Identity)
+	set proto_file_name=!proto_file_path:~0,-6!
+	del %proto_file_name%.pb.cc 2>nul
+	del %proto_file_name%.pb.h 2>nul
+	endlocal
+	">
+	</Exec>
+  </Target>
+  
+</Project>

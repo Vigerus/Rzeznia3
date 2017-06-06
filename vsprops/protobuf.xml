@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:transformCallback="Microsoft.Cpp.Dev10.ConvertPropertyCallback">
+  <Rule
+    Name="Google_Protocol_Buffers"
+    PageTemplate="tool"
+    DisplayName="Google Protocol Buffers "
+    Order="200">
+    <Rule.DataSource>
+      <DataSource
+        Persistence="ProjectFile"
+        ItemType="Google_Protocol_Buffers" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category
+        Name="General">
+        <Category.DisplayName>
+          <sys:String>General</sys:String>
+        </Category.DisplayName>
+      </Category>
+      <Category
+        Name="Command Line"
+        Subtype="CommandLine">
+        <Category.DisplayName>
+          <sys:String>Command Line</sys:String>
+        </Category.DisplayName>
+      </Category>
+    </Rule.Categories>
+  </Rule>
+  <ItemType
+    Name="Google_Protocol_Buffers"
+    DisplayName="Google Protocol Buffers " />
+  <FileExtension
+    Name="*.proto"
+    ContentType="Google_Protocol_Buffers" />
+  <ContentType
+    Name="Google_Protocol_Buffers"
+    DisplayName="Google Protocol Buffers "
+    ItemType="Google_Protocol_Buffers" />
+</ProjectSchemaDefinitions>
