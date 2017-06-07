@@ -4,16 +4,22 @@
     <ProtobufPathsImported>true</ProtobufPathsImported>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros">
-    <ProtobufDir>D:\progs\protoc-3.3.0</ProtobufDir>
-    <ProtobufInc>$(ProtobufDir)\include</ProtobufInc>
-    <ProtobufLib>$(ProtobufDir)\bin</ProtobufLib>
-    <ProtobufBin>$(ProtobufDir)\bin</ProtobufBin>
+    <ProtobufDir>d:\progs\protobuf-3.3.0</ProtobufDir>
+    <ProtobufInc>$(ProtobufDir)\src</ProtobufInc>
+    <ProtobufLib>$(ProtobufDir)\Debug</ProtobufLib>
+    <ProtobufBin>$(ProtobufDir)\Debug</ProtobufBin>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>
     <_PropertySheetDisplayName>Protobuf paths</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(ProtobufInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(ProtobufLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="ProtobufDir">

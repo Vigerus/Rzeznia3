@@ -16,30 +16,59 @@
 #include "../rzeznia3commons/winsockHelper.h"
 #include "../rzeznia3commons/rzeznia3commons.h"
 
+#include <google/protobuf/message.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+
 //move it to configuration later
 #define SERVER_PORT 1101
 
+std::pair<rzeznia3commons::messageType, google::protobuf::uint32> readHdr(char *header_buf)
+{
+   google::protobuf::uint32 msg_type;
+   google::protobuf::uint32 size;
+   google::protobuf::io::ArrayInputStream ais(header_buf, 8);
+   google::protobuf::io::CodedInputStream coded_input(&ais);
+   coded_input.ReadVarint32(&msg_type);
+   coded_input.ReadVarint32(&size);//Decode the HDR and get the size
 
+   switch (msg_type)
+   {
+      case rzeznia3commons::MT_chat:
+         return std::make_pair(rzeznia3commons::MT_chat, size);
+      break;
+   }
 
-void socketHandler(std::shared_ptr<SOCKET> socket, std::shared_ptr<rzeznia3commons::Player> gracz)
+   return std::make_pair(rzeznia3commons::MT_Unknown, size);
+}
+
+void readBody(std::shared_ptr<SOCKET> socket, std::pair<rzeznia3commons::messageType, int> header)
+{
+   switch (header.first)
+   {
+      case rzeznia3commons::MT_chat:
+         std::string chat = rzeznia3commons::Read_Chat(*socket, header.second);
+         std::cout << chat << std::endl;
+      break;
+   }
+}
+
+void socketHandler(std::shared_ptr<SOCKET> socket, std::shared_ptr<rzeznia3commons::PlayerStruct> gracz)
 {
    std::shared_ptr<SOCKET> csock = socket;
 
-   char buffer[4];
+   char buffer[8];
    int bytecount = 0;
    std::string output, pl;
    //log_packet logp;
 
-   memset(buffer, '\0', 4);
-
-   send(*csock, "dupa", 4, 0);
+   memset(buffer, 0, 8);
+  
 
    while (1) 
    {
       //Peek into the socket and get the packet size
-      if ((bytecount = recv(*csock,
-         buffer,
-         4, MSG_PEEK)) == -1) 
+      if ((bytecount = recv(*csock, buffer, 8, MSG_PEEK)) == -1) 
       {
          fprintf(stderr, "Error receiving data %d\n", WSAGetLastError());
          printf("Disconnecting %s...", gracz->name.c_str());
@@ -48,7 +77,7 @@ void socketHandler(std::shared_ptr<SOCKET> socket, std::shared_ptr<rzeznia3commo
       else if (bytecount == 0)
          break;
       std::cout << "First read byte count is " << bytecount << std::endl;
-      //readBody(*csock, readHdr(buffer));
+      readBody(csock, readHdr(buffer));
    }
 
    return;
@@ -71,8 +100,8 @@ public:
    socklen_t addr_size = 0;
    sockaddr_in sadr;
 
-   std::vector<std::shared_ptr<rzeznia3commons::Player>> m_players;
-   std::vector<std::shared_ptr<rzeznia3commons::Ludzik>> m_ludziki;
+   std::vector<std::shared_ptr<rzeznia3commons::PlayerStruct>> m_players;
+   std::vector<std::shared_ptr<rzeznia3commons::LudzikStruct>> m_ludziki;
 
    bool init()
    {
@@ -140,7 +169,7 @@ public:
             inet_ntop(AF_INET, &(sadr.sin_addr), str, INET_ADDRSTRLEN);
             printf("---------------------\nReceived connection from %s\n", str);
 
-            std::shared_ptr<rzeznia3commons::Player> nowygracz = std::make_shared<rzeznia3commons::Player>();
+            std::shared_ptr<rzeznia3commons::PlayerStruct> nowygracz = std::make_shared<rzeznia3commons::PlayerStruct>();
             HRESULT hCreateGuid = CoCreateGuid(&nowygracz->guid);
             std::ostringstream ss;
             ss << "Player" << std::dec << ++newplayercount;

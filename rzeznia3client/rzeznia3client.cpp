@@ -11,6 +11,7 @@
 #include <string>
 
 #include "../rzeznia3commons/winsockHelper.h"
+#include "../rzeznia3commons/rzeznia3commons.h"
 
 //move it to configuration later
 #define SERVER_PORT 1101
@@ -19,6 +20,8 @@ void socketListener(std::shared_ptr<SOCKET> socket)
 {
    char buffer[4];
    int bytecount = 0;
+
+   rzeznia3commons::Send_Chat(*socket, "Hello Nigga!");
 
    while (true)
    {

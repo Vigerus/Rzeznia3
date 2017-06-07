@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Player
+{
+   int32 id = 1;
+   string name = 2;
+}
+
+message Chat
+{
+   string from = 1;
+   string tekst = 2;   
+}

@@ -26,12 +26,12 @@
 	<Exec command="
     setlocal enableextensions enabledelayedexpansion
    
-    set SolutionDir=$(SolutionDir)
+    set SrcDir=$(ProjectDir)
     set InputPath=%3
-    set LibDri=$(CabInc)
+    set LibDri=$(ProtobufInc)
     set ProjDir=$(ProjectDir)
     
-    for %%F in (&quot;%SolutionDir:~0,-1%&quot;) do set SrcDir=%%~dpF
+  
     
     call :uppercase %SrcDir% SrcDir
     call :uppercase %LibDri% LibDri

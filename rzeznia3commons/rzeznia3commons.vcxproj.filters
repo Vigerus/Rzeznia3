@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="proto">
+      <UniqueIdentifier>{5c996815-1d34-4576-8df1-78a14a7e8eb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gen">
+      <UniqueIdentifier>{f4d77fc6-8803-467b-81b6-ba096582ad45}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rzeznia3commons.h">
@@ -26,6 +32,9 @@
     </ClInclude>
     <ClInclude Include="winsockHelper.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="protobuf\player.pb.h">
+      <Filter>gen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +50,9 @@
     <ClCompile Include="Dependencies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="protobuf\player.pb.cc">
+      <Filter>gen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -54,5 +66,10 @@
     <Image Include="app.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Google_Protocol_Buffers Include="protobuf\player.proto">
+      <Filter>proto</Filter>
+    </Google_Protocol_Buffers>
   </ItemGroup>
 </Project>
