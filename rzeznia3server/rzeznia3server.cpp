@@ -12,6 +12,7 @@
 #include <thread>
 #include <vector>
 #include <sstream>
+#include <mutex>
 
 #include "../rzeznia3commons/winsockHelper.h"
 #include "../rzeznia3commons/rzeznia3commons.h"
@@ -22,6 +23,10 @@
 
 //move it to configuration later
 #define SERVER_PORT 1101
+
+std::mutex mtx;
+
+std::vector<std::pair<std::shared_ptr<rzeznia3commons::PlayerStruct>, std::shared_ptr<SOCKET>>> m_player_list;
 
 std::pair<rzeznia3commons::messageType, google::protobuf::uint32> readHdr(char *header_buf)
 {
@@ -47,8 +52,16 @@ void readBody(std::shared_ptr<SOCKET> socket, std::pair<rzeznia3commons::message
    switch (header.first)
    {
       case rzeznia3commons::MT_chat:
-         std::string chat = rzeznia3commons::Read_Chat(*socket, header.second);
-         std::cout << chat << std::endl;
+         rzeznia3commons::ChatStruct chat = rzeznia3commons::Read_Chat(*socket, header.second);
+         mtx.lock();
+         std::cout << chat.from << ": " << chat.text << std::endl;
+
+         std::for_each(m_player_list.begin(), m_player_list.end(),
+            [&](std::pair<std::shared_ptr<rzeznia3commons::PlayerStruct>, std::shared_ptr<SOCKET>> const &el) 
+         {
+            rzeznia3commons::Send_Chat(*el.second, chat);
+         });
+         mtx.unlock();
       break;
    }
 }
@@ -76,7 +89,7 @@ void socketHandler(std::shared_ptr<SOCKET> socket, std::shared_ptr<rzeznia3commo
       }
       else if (bytecount == 0)
          break;
-      std::cout << "First read byte count is " << bytecount << std::endl;
+      //std::cout << "First read byte count is " << bytecount << std::endl;
       readBody(csock, readHdr(buffer));
    }
 
@@ -175,6 +188,9 @@ public:
             ss << "Player" << std::dec << ++newplayercount;
             nowygracz->name = ss.str();
             
+            mtx.lock();
+            m_player_list.push_back(std::make_pair(nowygracz, csock));
+            mtx.unlock();
             
             //pthread_create(&thread_id, 0, &SocketHandler, (void*)csock);
             //pthread_detach(thread_id);

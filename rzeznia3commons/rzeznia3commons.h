@@ -38,7 +38,13 @@ namespace rzeznia3commons
       double hp;
    };
 
-   void RZEZNIA3COMMONS_API Send_Chat(SOCKET socket, const char *text);
+   struct ChatStruct
+   {
+      std::string from;
+      std::string text;
+   };
 
-   std::string RZEZNIA3COMMONS_API Read_Chat(SOCKET socket, google::protobuf::uint32 size);
+   void RZEZNIA3COMMONS_API Send_Chat(SOCKET socket, ChatStruct const& chat);
+
+   ChatStruct RZEZNIA3COMMONS_API Read_Chat(SOCKET socket, google::protobuf::uint32 size);
 }

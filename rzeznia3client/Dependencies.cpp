@@ -5,3 +5,5 @@
 //#pragma comment(lib,"SDL2_net.lib")
 
 #pragma comment(lib, "Ws2_32.lib")
+
+#pragma comment(lib, "libprotobufd.lib")

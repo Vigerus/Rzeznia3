@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <SDLDir>d:\progs\SDL2-2.0.3</SDLDir>
+    <SDLDir>d:\progs\SDL2-2.0.5</SDLDir>
     <SDLInc>$(SDLDir)\include</SDLInc>
     <SDLLib>$(SDLDir)\lib\x64</SDLLib>
   </PropertyGroup>
