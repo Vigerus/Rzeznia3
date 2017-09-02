@@ -128,7 +128,11 @@ public:
       {
          std::string tekst;
 
+         std::cout << "> ";
+
          std::cin >> tekst;
+
+         rzeznia3commons::Send_Chat(*hsock, tekst.c_str());
       }
    }
 };

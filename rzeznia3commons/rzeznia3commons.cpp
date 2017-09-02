@@ -43,7 +43,7 @@ void RZEZNIA3COMMONS_API Send_Chat(SOCKET socket, const char *text)
       std::cout << "Error sending data: " << WSAGetLastError();
    }
    else
-      std::cout << "Sent bytes: " << bytecount;
+      std::cout << "Sent bytes: " << bytecount << std::endl;
 }
 
 std::string RZEZNIA3COMMONS_API Read_Chat(SOCKET socket, google::protobuf::uint32 siz)
