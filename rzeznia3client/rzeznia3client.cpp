@@ -9,20 +9,58 @@
 #include <Ws2tcpip.h>
 #include <thread> 
 #include <string>
+#include <mutex>
 
 #include "../rzeznia3commons/winsockHelper.h"
 #include "../rzeznia3commons/rzeznia3commons.h"
 
+#include <google/protobuf/message.h>
+#include <google/protobuf/io/coded_stream.h>
+#include <google/protobuf/io/zero_copy_stream_impl.h>
+
 //move it to configuration later
 #define SERVER_PORT 1101
+
+std::mutex mtx;
+
+std::pair<rzeznia3commons::messageType, google::protobuf::uint32> readHdr(char *header_buf)
+{
+   google::protobuf::uint32 msg_type;
+   google::protobuf::uint32 size;
+   google::protobuf::io::ArrayInputStream ais(header_buf, 8);
+   google::protobuf::io::CodedInputStream coded_input(&ais);
+   coded_input.ReadVarint32(&msg_type);
+   coded_input.ReadVarint32(&size);//Decode the HDR and get the size
+
+   switch (msg_type)
+   {
+   case rzeznia3commons::MT_chat:
+      return std::make_pair(rzeznia3commons::MT_chat, size);
+      break;
+   }
+
+   return std::make_pair(rzeznia3commons::MT_Unknown, size);
+}
+
+void readBody(std::shared_ptr<SOCKET> socket, std::pair<rzeznia3commons::messageType, int> header)
+{
+   switch (header.first)
+   {
+   case rzeznia3commons::MT_chat:
+      rzeznia3commons::ChatStruct chat = rzeznia3commons::Read_Chat(*socket, header.second);
+      mtx.lock();
+      std::cout << chat.from << ": " << chat.text << std::endl;
+      mtx.unlock();
+      break;
+   }
+}
 
 void socketListener(std::shared_ptr<SOCKET> socket)
 {
    char buffer[4];
    int bytecount = 0;
 
-   rzeznia3commons::Send_Chat(*socket, "Hello Nigga!");
-
+   
    while (true)
    {
       if ((bytecount = recv(*socket, buffer, 4, MSG_PEEK)) == -1)
@@ -32,11 +70,11 @@ void socketListener(std::shared_ptr<SOCKET> socket)
       }
       else if (bytecount == 0)
          break;
-
-      printf("got a message!\n");
-      char buf[5] = { 0 };
-      recv(*socket, buf, 4, MSG_WAITALL);
-      printf("Received: %s", buf);
+      readBody(socket, readHdr(buffer));
+//       printf("got a message!\n");
+//       char buf[5] = { 0 };
+//       recv(*socket, buf, 4, MSG_WAITALL);
+//       printf("Received: %s", buf);
    }
 }
 
@@ -128,11 +166,14 @@ public:
       {
          std::string tekst;
 
-         std::cout << "> ";
-
          std::cin >> tekst;
 
-         rzeznia3commons::Send_Chat(*hsock, tekst.c_str());
+         rzeznia3commons::ChatStruct chat;
+
+         chat.from = "Viger";
+         chat.text = tekst;
+
+         rzeznia3commons::Send_Chat(*hsock, chat);
       }
    }
 };
