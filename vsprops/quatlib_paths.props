@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <QuatlibDir>d:\progs\c\quatlib\</QuatlibDir>
+    <QuatlibInc>$(QuatlibDir)</QuatlibInc>
+    <QuatlibLib>$(QuatlibDir)\x64\Debug\</QuatlibLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>Quatlib paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(QuatlibInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(QuatlibLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="QuatlibDir">
+      <Value>$(QuatlibDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QuatlibInc">
+      <Value>$(QuatlibInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="QuatlibLib">
+      <Value>$(QuatlibLib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

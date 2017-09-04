@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <GlutDir>d:\progs\c\glut-3.7.6-bin</GlutDir>
+    <GlutInc>$(GlutDir)\inc</GlutInc>
+    <GlutLib>$(GlutDir)</GlutLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>Glut paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(GlutInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(GlutLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="GlutDir">
+      <Value>$(GlutDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GlutInc">
+      <Value>$(GlutInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="GlutLib">
+      <Value>$(GlutLib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

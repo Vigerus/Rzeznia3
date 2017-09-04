@@ -1,0 +1,9 @@
+<config>
+   <client>
+      <connect>192.168.1.5:5555</connect>
+      <name>Viger</name>
+   </client>
+   <server>
+      <host>127.0.0.1:5555</host>
+   </server>
+</config>

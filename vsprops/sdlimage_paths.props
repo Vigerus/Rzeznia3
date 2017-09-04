@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <SDLImageDir>d:\progs\SDL2_image-2.0.0</SDLImageDir>
+    <SDLImageInc>$(SDLImageDir)\include</SDLImageInc>
+    <SDLImageLib>$(SDLImageDir)\lib\x64</SDLImageLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>SDL Image paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SDLImageInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(SDLImageLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="SDLImageDir">
+      <Value>$(SDLImageDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLImageInc">
+      <Value>$(SDLImageInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="SDLImageLib">
+      <Value>$(SDLImageLib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

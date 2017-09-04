@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <VigafiDir>d:\progs\vigafi</VigafiDir>
+    <VigafiInc>$(VigafiDir)</VigafiInc>
+    <VigafiLib>$(VigafiDir)\$(IntDir)</VigafiLib>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+    <_PropertySheetDisplayName>Vigafi paths</_PropertySheetDisplayName>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VigafiInc);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(VigafiLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="VigafiDir">
+      <Value>$(VigafiDir)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VigafiInc">
+      <Value>$(VigafiInc)</Value>
+    </BuildMacro>
+    <BuildMacro Include="VigafiLib">
+      <Value>$(VigafiLib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
