@@ -11,6 +11,8 @@
 #include <string>
 #include <mutex>
 
+#include "vigafi.h"
+
 #include "../rzeznia3commons/winsockHelper.h"
 #include "../rzeznia3commons/rzeznia3commons.h"
 
@@ -90,6 +92,7 @@ public:
    {
       int host_port = SERVER_PORT;
       char* host_name = "127.0.0.1";
+      //char* host_name = "192.168.1.134";
 
       struct sockaddr_in my_addr;
 
@@ -162,6 +165,15 @@ public:
 
    void run()
    {
+      ::CoInitialize(0);
+
+      //create context
+//       VIGAFI::COMMON::API::IContext *pContext = CreateVIGAFIContext();
+// 
+//       pContext->Init();
+//       pContext->GetVideoManager().Init(1024, 768, false);
+//       pContext->GetVideoManager().InitGL(VIGAFI::MISC::API::IVideoManager::vp_2dworld);
+
       while (true)
       {
          std::string tekst;

@@ -3,17 +3,27 @@
   <ImportGroup Label="PropertySheets">
     <Import Project="vsprops\protobuf_paths.props" />
     <Import Project="vsprops\sdl_paths.props" />
+    <Import Project="vsprops\sdlimage_paths.props" />
     <Import Project="vsprops\sdlnet_paths.props" />
+    <Import Project="vsprops\quatlib_paths.props" />
+    <Import Project="vsprops\vigafi_paths.props" />
+    <Import Project="vsprops\glut_paths.props" />
   </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <OEMDLLS>d:\progs\c\oemdlls\</OEMDLLS>
+  </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
     <_PropertySheetDisplayName>Rzeznia3 paths</_PropertySheetDisplayName>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OEMDLLS);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <BuildMacro Include="OEMDLLS">
+      <Value>$(OEMDLLS)</Value>
+    </BuildMacro>
   </ItemGroup>
 </Project>

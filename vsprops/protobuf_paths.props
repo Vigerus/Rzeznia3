@@ -4,10 +4,10 @@
     <ProtobufPathsImported>true</ProtobufPathsImported>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros">
-    <ProtobufDir>d:\progs\protobuf</ProtobufDir>
+    <ProtobufDir>d:\progs\protobuf-3.3.0</ProtobufDir>
     <ProtobufInc>$(ProtobufDir)\src</ProtobufInc>
-    <ProtobufLib>$(ProtobufDir)\cmake\CMakeFiles\Debug</ProtobufLib>
-    <ProtobufBin>$(ProtobufDir)\cmake\CMakeFiles\Debug</ProtobufBin>
+    <ProtobufLib>$(ProtobufDir)\Debug</ProtobufLib>
+    <ProtobufBin>$(ProtobufDir)\Debug</ProtobufBin>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>11.0.61030.0</_ProjectFileVersion>
