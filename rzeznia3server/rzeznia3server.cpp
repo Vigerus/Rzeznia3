@@ -22,7 +22,7 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
 //move it to configuration later
-#define SERVER_PORT 1101
+#define SERVER_PORT 5556
 
 std::mutex mtx;
 
@@ -96,20 +96,54 @@ void socketHandler(std::shared_ptr<SOCKET> socket, std::shared_ptr<rzeznia3commo
    return;
 }
 
+void connectionsHandler(SOCKET hsock, socklen_t addr_size, sockaddr_in sadr)
+{
+   std::shared_ptr<SOCKET> csock;
+   unsigned int newplayercount = 0;
+
+   while (true) {
+      printf("waiting for a connection\n");
+      csock = std::shared_ptr<SOCKET>(new SOCKET);
+      if ((*csock = accept(hsock, (sockaddr*)&sadr, &addr_size)) != -1)
+      {
+         char str[INET_ADDRSTRLEN];
+         inet_ntop(AF_INET, &(sadr.sin_addr), str, INET_ADDRSTRLEN);
+         printf("---------------------\nReceived connection from %s\n", str);
+
+         std::shared_ptr<rzeznia3commons::PlayerStruct> nowygracz = std::make_shared<rzeznia3commons::PlayerStruct>();
+         HRESULT hCreateGuid = CoCreateGuid(&nowygracz->guid);
+         std::ostringstream ss;
+         ss << "Player" << std::dec << ++newplayercount;
+         nowygracz->name = ss.str();
+
+         mtx.lock();
+         m_player_list.push_back(std::make_pair(nowygracz, csock));
+         mtx.unlock();
+
+         //pthread_create(&thread_id, 0, &SocketHandler, (void*)csock);
+         //pthread_detach(thread_id);
+         new std::thread(socketHandler, csock, nowygracz);
+      }
+      else
+      {
+         fprintf(stderr, "Error accepting %d\n", errno);
+      }
+   }
+}
+
 class RzezniaServer
 {
 public:
    RzezniaServer()
    {
-      newplayercount = 0;
    };
 
    virtual ~RzezniaServer() {};
 
-   unsigned int newplayercount;
+   
 
    SOCKET hsock;
-   std::shared_ptr<SOCKET> csock;
+   
    socklen_t addr_size = 0;
    sockaddr_in sadr;
 
@@ -165,6 +199,7 @@ public:
 
       addr_size = sizeof(sockaddr_in);
 
+      new std::thread(connectionsHandler, hsock, addr_size, sadr);
 
       return 1;
    }
@@ -173,33 +208,10 @@ public:
 
    void run()
    {
-      while (true) {
-         printf("waiting for a connection\n");
-         csock = std::shared_ptr<SOCKET>(new SOCKET);
-         if ((*csock = accept(hsock, (sockaddr*)&sadr, &addr_size)) != -1)
-         {
-            char str[INET_ADDRSTRLEN];
-            inet_ntop(AF_INET, &(sadr.sin_addr), str, INET_ADDRSTRLEN);
-            printf("---------------------\nReceived connection from %s\n", str);
 
-            std::shared_ptr<rzeznia3commons::PlayerStruct> nowygracz = std::make_shared<rzeznia3commons::PlayerStruct>();
-            HRESULT hCreateGuid = CoCreateGuid(&nowygracz->guid);
-            std::ostringstream ss;
-            ss << "Player" << std::dec << ++newplayercount;
-            nowygracz->name = ss.str();
-            
-            mtx.lock();
-            m_player_list.push_back(std::make_pair(nowygracz, csock));
-            mtx.unlock();
-            
-            //pthread_create(&thread_id, 0, &SocketHandler, (void*)csock);
-            //pthread_detach(thread_id);
-            new std::thread(socketHandler, csock, nowygracz);
-         }
-         else
-         {
-            fprintf(stderr, "Error accepting %d\n", errno);
-         }
+      while (true)
+      {
+         Sleep(33);
       }
    }
 };

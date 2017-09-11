@@ -8,6 +8,8 @@
 #pragma comment(lib,"Winmm.lib")
 #pragma comment(lib,"quatlib.lib")
 #pragma comment(lib,"vigafi.lib")
+#pragma comment(lib,"opengl32.lib")
+#pragma comment(lib,"glut32.lib")
 
 #pragma comment(lib, "Ws2_32.lib")
 

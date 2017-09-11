@@ -21,6 +21,21 @@ namespace rzeznia3commons
       MT_chat = 2
    };
 
+#define PLAYER_CONTROLS_LEFT 1
+#define PLAYER_CONTROLS_RIGHT 2
+
+   struct PlayerControls
+   {
+      unsigned int keys;
+   };
+
+   struct PlayerData
+   {
+      double x, y;
+      bool direction;
+      double hp;
+   };
+
    //single 
    struct PlayerStruct
    {
@@ -33,9 +48,8 @@ namespace rzeznia3commons
    {
       GUID owner;
       std::string name;
-      double x, y;
-
-      double hp;
+      PlayerControls controls;
+      PlayerData data;
    };
 
    struct ChatStruct

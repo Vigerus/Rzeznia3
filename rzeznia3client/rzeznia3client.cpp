@@ -11,6 +11,10 @@
 #include <string>
 #include <mutex>
 
+#include "SDL_main.h"
+#include "SDL.h"
+#include "SDL_image.h"
+#include <SDL_opengl.h>
 #include "vigafi.h"
 
 #include "../rzeznia3commons/winsockHelper.h"
@@ -20,8 +24,11 @@
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
+
+#include "CWorld.h"
+
 //move it to configuration later
-#define SERVER_PORT 1101
+#define SERVER_PORT 5556
 
 std::mutex mtx;
 
@@ -80,18 +87,28 @@ void socketListener(std::shared_ptr<SOCKET> socket)
    }
 }
 
+//////////////////////////////////////////
+//
+//////////////////////////////////////////
+
+int HSIZE = 1024, VSIZE = 768, DEPTH = 32, FLAGS = 0;
+
+unsigned int flags = VIGAFI2_DRAWABLE_FLAG_PHYSX;
+
 class RzezniaClient
 {
+private:
+   int notquit;
 public:
-   RzezniaClient() {};
+   RzezniaClient() { notquit = 1; };
    virtual ~RzezniaClient() {};
 
    std::shared_ptr<SOCKET> hsock;
 
-   bool init()
+   bool net_init()
    {
       int host_port = SERVER_PORT;
-      char* host_name = "127.0.0.1";
+      char* host_name = "viger.ddns.net";
       //char* host_name = "192.168.1.134";
 
       struct sockaddr_in my_addr;
@@ -163,30 +180,115 @@ public:
       return 1;
    }
 
-   void run()
+   void main_poll(VIGAFI::MISC::API::IControls &controls)
    {
-      ::CoInitialize(0);
+      controls.Poll();
 
-      //create context
-//       VIGAFI::COMMON::API::IContext *pContext = CreateVIGAFIContext();
-// 
-//       pContext->Init();
-//       pContext->GetVideoManager().Init(1024, 768, false);
-//       pContext->GetVideoManager().InitGL(VIGAFI::MISC::API::IVideoManager::vp_2dworld);
+      SDL_Event event;
 
-      while (true)
+      if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_QUIT, SDL_QUIT) == 1) notquit = 0;
+   };
+
+   void main_cycle(
+      VIGAFI::COMMON::API::IContext *pContext
+      ,IWorld *pWorld
+      ,double dt
+   )
+   {
+      if (pContext->GetControls().GiveKeyState(SDL_SCANCODE_J)) flags = VIGAFI2_DRAWABLE_FLAG_PHYSX;
+      if (pContext->GetControls().GiveKeyState(SDL_SCANCODE_K)) flags = VIGAFI2_DRAWABLE_FLAG_SIMPLE;
+      if (pContext->GetControls().GiveKeyState(SDL_SCANCODE_L)) flags = VIGAFI2_DRAWABLE_FLAG_FULL;
+
+      pWorld->Calculate(dt);
+   }
+
+
+   void main_draw(
+      VIGAFI::COMMON::API::IContext *pContext
+      ,IWorld *pWorld
+   )
+   {
+      //clear
+      glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+//       glMatrixMode(GL_MODELVIEW);
+//       glPushMatrix();
+//       pWorld->Draw(flags);
+//       glPopMatrix();
+
+      pContext->GetVideoManager().GLEnter2DMode();
+      glPushMatrix();
+      glTranslatef(HSIZE / 2, VSIZE / 2, 0);
+      pWorld->Draw(flags);
+      glPopMatrix();
+      pContext->GetVideoManager().GLLeave2DMode();
+
+      pContext->GetVideoManager().GLEnter2DMode();
+      pWorld->DrawUI(flags);
+      pContext->GetVideoManager().GLLeave2DMode();
+
+      //Update screen
+      pContext->GetVideoManager().SwapBuffers();
+   }
+
+   void main_cleanup(
+      VIGAFI::COMMON::API::IContext *pContext
+      ,IWorld *pWorld
+   )
+   {
+      //Bring out the dead
+      pWorld->CleanUp();
+   }
+
+
+   void run(
+      VIGAFI::COMMON::API::IContext *pContext
+      ,IWorld *pWorld
+   )
+   {
+      DWORD start = 0, end = 0;
+      double delta;
+
+      end = timeGetTime();
+
+      double maxDelta = 1.0f / 40.0f;
+
+      while (notquit)
       {
-         std::string tekst;
+         delta = ((double)end - (double)start) / 1000.0f;
 
-         std::cin >> tekst;
+         start = timeGetTime();
 
-         rzeznia3commons::ChatStruct chat;
+         main_poll(pContext->GetControls());
 
-         chat.from = "Viger";
-         chat.text = tekst;
+         if (delta > maxDelta)
+            delta = maxDelta;
 
-         rzeznia3commons::Send_Chat(*hsock, chat);
+         main_cycle(pContext, pWorld, delta);
+
+         main_draw(pContext, pWorld);
+
+         main_cleanup(pContext, pWorld);
+
+         Sleep(1);
+
+         end = timeGetTime();
       }
+
+//       while (true)
+//       {
+//          std::string tekst;
+// 
+//          std::cin >> tekst;
+// 
+//          rzeznia3commons::ChatStruct chat;
+// 
+//          chat.from = "Viger";
+//          chat.text = tekst;
+// 
+//          rzeznia3commons::Send_Chat(*hsock, chat);
+//       }
    }
 };
 
@@ -194,17 +296,39 @@ int _tmain(int argc, _TCHAR* argv[])
 {
    ::CoInitialize(0);
 
+   //create context
+   VIGAFI::COMMON::API::IContext *pContext = CreateVIGAFIContext();
+
+   pContext->Init();
+   pContext->GetVideoManager().Init(HSIZE, VSIZE, false);
+   pContext->GetVideoManager().InitGL(VIGAFI::MISC::API::IVideoManager::vp_2dworld);
+
+   pContext->GetTextureManager().LoadTextureToList("d:\\progs\\terradom\\cursor.tga", "cursor", VIGAFI::GRAPHICS::API::TexType_0);
+
+   pContext->GetTextureManager().LoadTextureToList("d:\\progs\\terradom\\ludzik.tga", "ludzik", VIGAFI::GRAPHICS::API::TexType_0);
+
+   //net init
    if (!winsock_init())
       return(-1);
 
    RzezniaClient client;
 
-   if (!client.init())
+   if (!client.net_init())
       return (-1);
 
-   client.run();
+   SDL_ShowCursor(0);
+
+   //create World
+   IWorld *pWorld = new CWorld(pContext);
+
+   if (!pWorld->Init())
+      return (-1);
+
+   client.run(pContext, pWorld);
 
    winsock_deinit();
+
+   ::CoUninitialize();
   
     return 0;
 }

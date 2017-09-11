@@ -3,9 +3,9 @@
   <ImportGroup Label="PropertySheets">
   </ImportGroup>
   <PropertyGroup Label="UserMacros">
-    <GlutDir>d:\progs\c\glut-3.7.6-bin</GlutDir>
-    <GlutInc>$(GlutDir)\inc</GlutInc>
-    <GlutLib>$(GlutDir)</GlutLib>
+    <GlutDir>d:\progs\cg</GlutDir>
+    <GlutInc>$(GlutDir)\include</GlutInc>
+    <GlutLib>$(GlutDir)\lib.x64</GlutLib>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
