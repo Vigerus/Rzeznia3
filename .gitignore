@@ -25,3 +25,4 @@
 **/*.VC.opendb
 **/*.classpath
 **/target/**
+**/*.props

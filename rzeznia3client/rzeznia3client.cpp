@@ -107,11 +107,39 @@ public:
 
    bool net_init()
    {
-      int host_port = SERVER_PORT;
+      char* host_port = "5556";
       char* host_name = "viger.ddns.net";
-      //char* host_name = "192.168.1.134";
+      
+      struct addrinfo *result = NULL;
+      DWORD dwRetval = getaddrinfo(host_name, host_port, NULL, &result);
+      if (dwRetval != 0) 
+      {
+         printf("getaddrinfo failed with error: %d\n", dwRetval);
 
+         return false;
+      }
+      struct addrinfo *ptr = result;
+      bool found = false;
       struct sockaddr_in my_addr;
+
+      while (ptr)
+      {
+         if (ptr->ai_family == AF_INET)
+         {
+            my_addr = *(struct sockaddr_in*)(ptr->ai_addr);
+            found = true;
+         }
+
+         if (found)
+            break;
+         ptr = ptr->ai_next;
+      }
+
+      freeaddrinfo(result);
+
+      if (!found)
+         return 0;
+      
 
       char buffer[1024];
       int bytecount;
@@ -139,11 +167,11 @@ public:
       }
       free(p_int);
 
-      my_addr.sin_family = AF_INET;
-      my_addr.sin_port = htons(host_port);
-
-      memset(&(my_addr.sin_zero), 0, 8);
-      inet_pton(AF_INET, host_name, &my_addr.sin_addr);
+//       my_addr.sin_family = AF_INET;
+//       my_addr.sin_port = htons(host_port);
+// 
+//       memset(&(my_addr.sin_zero), 0, 8);
+//       inet_pton(AF_INET, host_name, &my_addr.sin_addr);
       if (connect(*hsock, (struct sockaddr*)&my_addr, sizeof(my_addr)) == -1) 
       {
          if ((err = errno) != EINPROGRESS) 
